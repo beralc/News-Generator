@@ -4,7 +4,7 @@
 <div class="row justify-content-center">
     <div class="col-md-10">
 
-        <!-- Search Bar -->
+        <!-- Barra de búsqueda -->
         <div class="mb-4">
             <form class="form-inline" method="get" action="/content">
                 <input class="form-control mr-sm-2" type="text" placeholder="Buscar por palabra" aria-label="Search" name="query">
@@ -12,13 +12,13 @@
             </form>
         </div>
 
-        <!-- Filter buttons -->
+        <!-- botones para filtrar -->
         <div class="mb-4">Filtrar por:
             <a href="/content?type=news" class="btn btn-primary">Noticias</a>
             <a href="/content?type=press_release" class="btn btn-secondary">Notas de prensa</a>
         </div>
 
-        <!-- List of Content -->
+        <!-- lista de contenido -->
         {% if contents %}
         <ul class="list-group">
             {% for content in contents %}
