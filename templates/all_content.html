@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+
+        <!-- Search Bar -->
+        <div class="mb-4">
+            <form class="form-inline" method="get" action="/content">
+                <input class="form-control mr-sm-2" type="text" placeholder="Buscar por palabra" aria-label="Search" name="query">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
+            </form>
+        </div>
+
+        <!-- Filter buttons -->
+        <div class="mb-4">Filtrar por:
+            <a href="/content?type=news" class="btn btn-primary">Noticias</a>
+            <a href="/content?type=press_release" class="btn btn-secondary">Notas de prensa</a>
+        </div>
+
+        <!-- List of Content -->
+        {% if contents %}
+        <ul class="list-group">
+            {% for content in contents %}
+            <li class="list-group-item" data-state="collapsed">
+                <strong>{{ content.content_type }}:</strong> {{timestamp}}<br>
+                <span class="short-content">{{ content.content|truncate(100)}}</span>
+                <span class="full-content" style="display: none;">{{ content.content|safe}}</span>
+                <span class="toggle" style="font-weight:bold;" onclick="toggleContent(event)" style="cursor: pointer;">+ leer más</span>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No se ha encontrado el contenido</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    function toggleContent(event) {
+        const li = event.target.closest('li');
+        const shortContent = li.querySelector('.short-content');
+        const fullContent = li.querySelector('.full-content');
+        const toggleSymbol = li.querySelector('.toggle');
+
+        if (li.getAttribute('data-state') === 'collapsed') {
+            shortContent.style.display = 'none';
+            fullContent.style.display = 'block';
+            toggleSymbol.textContent = 'CERRAR';
+            li.setAttribute('data-state', 'expanded');
+        } else {
+            shortContent.style.display = 'block';
+            fullContent.style.display = 'none';
+            toggleSymbol.textContent = '+ leer más';
+            li.setAttribute('data-state', 'collapsed');
+        }
+    }
+</script>
+{% endblock %}

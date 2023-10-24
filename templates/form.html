@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        #loadingSpinner {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 9999;
+        }
+        
+        .spinner-border {
+            width: 4rem;
+            height: 4rem;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de noticias y notas de prensa EDELVIVES</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Optional: Bootstrap JS and Popper.js for some Bootstrap components -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/"><img src="https://www.letrasdeencuentro.es/images/logos/logo-ed-edelvives.jpg"></a></img>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/content">Ver contenido generado</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">Generador EDELVIVES</div>
+                    <div class="card-body">
+                        <form action="/" method="post">
+                            <div class="form-group">
+                                <label for="date">Fecha:</label>
+                                <input type="text" id="date" name="date" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="location">Lugar:</label>
+                                <input type="text" id="location" name="location" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description">Descripción noticia:</label>
+                                <textarea id="description" name="description" class="form-control"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="objective">Objetivo:</label>
+                                <textarea id="objective" name="objective" class="form-control"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="entities">Entidades involucradas:</label>
+                                <textarea id="entities" name="entities" class="form-control"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="details">Detalles específicos del producto / acuerdo / evento:</label>
+                                <textarea id="details" name="details" class="form-control"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="opinions">Opiniones o citas de los representantes:</label>
+                                <textarea id="opinions" name="opinions" class="form-control"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="context">Contexto o trasfondo relevante:</label>
+                                <textarea id="context" name="context" class="form-control"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="actions">Acciones de la entidad involucrada:</label>
+                                <textarea id="actions" name="actions" class="form-control"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="contact">Contacto:</label>
+                                <textarea id="contact" name="contact" class="form-control"></textarea>
+                            </div>
+
+                            <button type="submit" name="content_type" value="news" class="btn btn-primary">Generar noticia</button>
+                            <button type="submit" name="content_type" value="press_release" class="btn btn-primary">Generar Nota de prensa</button>
+
+                        </form>
+                        
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                    <div class="alert alert-{{ category }}">{{ message|safe }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="loadingSpinner">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('form').submit(function() {
+                $('#loadingSpinner').show();
+            });
+        });
+    </script>
+
+    <!-- Modal Structure -->
+<div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="feedbackModalLabel">Resultado</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Content will be populated using jQuery -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    // If there's a flashed message, display it in the modal and hide the spinner.
+    var message = $('.alert').text().trim(); // Get the message from the flashed alert.
+
+    if (message) {
+        $('#loadingSpinner').hide(); // Hide the spinner.
+        
+        // Populate modal with the message and show it.
+        $('.modal-body').text(message);
+        $('#feedbackModal').modal('show');
+    }
+});
+
+
+</script>
+
+        
+</body>
+
+</html>
